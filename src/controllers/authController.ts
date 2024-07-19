@@ -1,25 +1,24 @@
+// src/controllers/authController.ts
 import { Request as ExpressRequest, Response } from 'express';
 
 const handleAuth = async (req: ExpressRequest, res: Response) => {
     try {
-        const { Auth } = await import('@auth/core');  // Dynamically import @auth/core
-        const authConfig = (await import('../config.js')).default; // Dynamically import config
+        const { Auth } = await import('@auth/core');
+        const { default: authConfig } = await import('../config.js');
 
         const headers = new Headers();
         for (const headerName in req.headers) {
-            const headerValue: string = req.headers[headerName]?.toString() ?? "";
+            const headerValue = req.headers[headerName];
             if (Array.isArray(headerValue)) {
-                for (const value of headerValue) {
-                    headers.append(headerName, value);
-                }
-            } else {
+                headerValue.forEach(value => headers.append(headerName, value));
+            } else if (headerValue) {
                 headers.append(headerName, headerValue);
             }
         }
 
-        const request = new Request(req.protocol + '://' + req.get('host') + req.originalUrl, {
+        const request = new Request(`${req.protocol}://${req.get('host')}${req.originalUrl}`, {
             method: req.method,
-            headers: headers,
+            headers,
             body: req.body
         });
 
@@ -34,9 +33,9 @@ const handleAuth = async (req: ExpressRequest, res: Response) => {
         });
         const body = await response.text();
         res.send(body);
-
     } catch (error) {
-        res.status(500).send('Authentication error');
+        res.status(500).send('Authentication error'+error);
+        console.error(error);
     }
 };
 
