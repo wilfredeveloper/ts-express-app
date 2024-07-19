@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
 import { authenticate } from './middleware/authMiddleware';
 
 dotenv.config();
@@ -16,6 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use(authRoutes);
+app.use(userRoutes);
+
 
 app.get('/', (req, res) => {
     res.send('Hello World');
