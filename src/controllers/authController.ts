@@ -34,7 +34,7 @@ const handleAuth = async (req: ExpressRequest, res: Response) => {
         const body = await response.text();
         res.send(body);
     } catch (error) {
-        res.status(500).send('Authentication error');
+        res.status(500).send('Authentication error'+error);
         console.error(error);
     }
 };
