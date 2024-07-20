@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 export type UserRole = 'House-hunter' | 'Landlord/Caretaker' | 'Agent' | 'Super Admin';
 
 export interface IUser extends Document {
+    _id: string;
     username: string;
     email: string;
     password: string;

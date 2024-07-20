@@ -6,7 +6,9 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noImplicitAny": false
+    // "noImplicitReturns": true
   },
   "include": ["src/**/*.ts", "src/controllers/authController.ts", "src/types/*.ts"],
   "exclude": ["node_modules"]

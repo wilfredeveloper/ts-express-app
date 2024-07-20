@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import User, { UserRole } from "../models/User";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv"
+import { generateAccessToken, generateRefreshToken } from "../utils/jwtUtils";
+import { User as UserType } from "../types/user";
 
 dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 export const signup = async (req: Request, res: Response) => {
   const {
@@ -25,20 +24,18 @@ export const signup = async (req: Request, res: Response) => {
     const user = new User({ username, email, password, role: role || 'House-hunter' });
     await user.save();
 
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const accessToken = generateAccessToken(user._id);
 
     res
       .status(201)
       .json({
         message: "User created successfully",
-        accessToken: token,
+        accessToken: accessToken,
         user: { id: user._id, username, email, role: user.role },
       });
   } catch (error) {
     console.log(error)
-    res.status(500).json({ message: "Server error", error: error });
+    return res.status(500).json({ message: "Server error", error: error });
   }
 };
 
@@ -56,15 +53,16 @@ export const signin = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
 
     res
       .status(200)
       .json({
         message: "Sign in successful",
-        accessToken: token,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
         user: {
           id: user._id,
           username: user.username,
@@ -73,7 +71,7 @@ export const signin = async (req: Request, res: Response) => {
         },
       });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error });
+    return res.status(500).json({ message: "Server error", error: error });
   }
 };
 
@@ -90,6 +88,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
       })),
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error });
+    return res.status(500).json({ message: "Server error", error: error });
   }
 }

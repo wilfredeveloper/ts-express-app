@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes";
 import { authenticate } from "./middleware/authMiddleware";
 import mongoose from "mongoose";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
@@ -12,11 +13,19 @@ const app = express();
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://localhost:27017/homeseek";
 
+const allowedOrigins = ["http://localhost:3000"];
+
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true,
+}
+
 const startServer = async () => {
   try {
     await mongoose.connect(MONGODB_URI)
 
     // Middleware
+    app.use(cors(corsOptions));
     app.use(cookieParser());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -30,7 +39,7 @@ const startServer = async () => {
     });
 
     // Start server
-    const PORT = process.env.SERVER_PORT || 3000;
+    const PORT = process.env.SERVER_PORT || 5678;
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
