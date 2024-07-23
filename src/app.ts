@@ -1,13 +1,12 @@
 // src/app.ts
 import express from "express";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes";
 import { authenticate } from "./middleware/authMiddleware";
 import mongoose from "mongoose";
 import cors from "cors";
 
-dotenv.config();
+require('dotenv').config();
 const app = express();
 
 const MONGODB_URI =
@@ -23,6 +22,7 @@ const corsOptions = {
 const startServer = async () => {
   try {
     await mongoose.connect(MONGODB_URI)
+    console.log("Connected to MongoDB");
 
     // Middleware
     app.use(cors(corsOptions));
