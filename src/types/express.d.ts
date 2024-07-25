@@ -1,9 +1,8 @@
-import { JwtPayload } from 'jsonwebtoken';
-
+import type { User } from "../models/User";
 declare global {
   namespace Express {
     interface Request {
-      user?: string | JwtPayload; // Adjust the type as per your JWT payload structure
+      user?: User; // Adjust the type as per your JWT payload structure
     }
   }
 }
