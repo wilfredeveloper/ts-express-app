@@ -9,7 +9,7 @@ userRoutes.post('/api/v1/auth/signup', signup);
 userRoutes.post('/api/v1/auth/signin', signin);
 userRoutes.post(`/api/v1/auth/rehydrate-token`, rehydrateToken);
 userRoutes.post(`/forgot-password`, sendResetPassord);
-userRoutes.post('verify-reset-token', verifyResetToken);
-userRoutes.post(`/reset-password/:token`, resetPassword);
+userRoutes.post('/verify-reset-token', verifyResetToken);
+userRoutes.post(`/reset-password/`, resetPassword);
 
 export default userRoutes

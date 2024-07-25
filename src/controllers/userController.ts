@@ -224,12 +224,12 @@ export const verifyResetToken = async (req: Request, res: Response) => {
 };
 
 export const resetPassword = async (req: Request, res: Response) => {
-  const { email, token, password } = req.body;
+  const { email, password } = req.body;
+  const token = req.params.token;
 
   try {
     const user = await User.findOne({
       email,
-      resetPasswordToken: token,
       resetPasswordExpires: { $gt: new Date() }
     });
 
