@@ -1,26 +1,35 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { NextFunction, Request, Response } from 'express';
+import User, { UserRole } from '../models/User';
+import { verifyToken } from '../utils/jwtUtils';
+interface DecodedToken {
+  userId: string;
+  role: UserRole;
+}
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-
-export const authorize = (roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization?.split(" ")[1];
+const rbacMiddleware = (allowedRoles: string[]) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
-      return res.status(403).json({ message: "No token provided" });
+      return res.status(401).json({ message: "Access token is required" });
     }
 
     try {
-      const decoded: any = jwt.verify(token, JWT_SECRET);
-      if (roles.includes(decoded.role)) {
-        req.user = decoded;
-        next();
-      } else {
-        res.status(403).json({ message: "Access denied" });
+      const decoded = await verifyToken(token as string) as DecodedToken;
+
+      const user = await User.findById(decoded.userId);
+
+      if (!user || !allowedRoles.includes(user.role)) {
+        return res.status(403).json({ message: "Access denied" });
       }
+      
+
+      // req.user = user; // Attach user to request object for further use
+      next();
     } catch (error) {
-      res.status(403).json({ message: "Invalid token" });
+      return res.status(403).json({ message: "Access denied", error });
     }
   };
 };
+
+export default rbacMiddleware;
