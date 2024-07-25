@@ -1,5 +1,5 @@
-import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
+import mongoose, { Document, Schema } from 'mongoose';
 
 export type UserRole = 'House-hunter' | 'Landlord/Caretaker' | 'Agent' | 'Super Admin';
 
@@ -9,6 +9,8 @@ export interface IUser extends Document {
     email: string;
     password: string;
     role: UserRole;
+    resetPasswordToken?: string;
+    resetPasswordExpires?: Date;
     comparePassword(password: string): Promise<boolean>;
 }
 
@@ -16,7 +18,9 @@ const UserSchema: Schema<IUser> = new Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['House-hunter', 'Landlord/Caretaker', 'Agent', 'Super Admin'], default: 'House-hunter' }
+    role: { type: String, enum: ['House-hunter', 'Landlord/Caretaker', 'Agent', 'Super Admin'], default: 'House-hunter' },
+    resetPasswordToken: { type: String},
+    resetPasswordExpires: { type: Date }
 });
 
 UserSchema.pre('save', async function(next) {
