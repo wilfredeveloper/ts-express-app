@@ -1,10 +1,9 @@
 // src/app.ts
-import express from "express";
 import cookieParser from "cookie-parser";
-import userRoutes from "./routes/userRoutes";
-import { authenticate } from "./middleware/authMiddleware";
-import mongoose from "mongoose";
 import cors from "cors";
+import express from "express";
+import mongoose from "mongoose";
+import userRoutes from "./routes/userRoutes";
 
 require('dotenv').config();
 const app = express();
@@ -29,7 +28,7 @@ const startServer = async () => {
     app.use(cookieParser());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    // app.use(authenticate);
+    // app.use(RBACMiddleware);
 
     // Routes
     app.use(userRoutes);

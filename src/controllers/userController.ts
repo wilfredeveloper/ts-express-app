@@ -11,6 +11,7 @@ dotenv.config();
 
 interface DecodedToken {
   userId: string;
+  role: UserRole;
 }
 
 export const signup = async (req: Request, res: Response) => {
@@ -53,6 +54,8 @@ export const signup = async (req: Request, res: Response) => {
 
 export const signin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  const reqToken = await req.headers.authorization
+  console.log("Req Token: ", reqToken)
 
   try {
     const user = await User.findOne({ email });
@@ -106,14 +109,15 @@ export const getAllUsers = async (req: Request, res: Response) => {
 };
 
 export const rehydrateToken = async (req: Request, res: Response) => {
-  const { refreshToken } = req.body;
+
+  const { refreshToken } = req.query;
 
   if (!refreshToken) {
     return res.status(400).json({ message: "Refresh token is required" });
   }
 
   try {
-    const decoded = await verifyRefreshToken(refreshToken) as DecodedToken;
+    const decoded = await verifyRefreshToken(refreshToken as string) as DecodedToken;
     const user = await User.findById(decoded.userId);
 
     if (!user) {
