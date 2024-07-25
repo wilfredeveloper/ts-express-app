@@ -40,10 +40,12 @@ export const signup = async (req: Request, res: Response) => {
     await user.save();
 
     const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
 
     res.status(201).json({
       message: "User created successfully",
       accessToken: accessToken,
+      refreshToken: refreshToken,
       user: { id: user._id, username, email, role: user.role },
     });
   } catch (error) {
