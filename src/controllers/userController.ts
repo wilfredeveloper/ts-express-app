@@ -224,7 +224,7 @@ export const verifyResetToken = async (req: Request, res: Response) => {
 };
 
 export const resetPassword = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, newPassword } = req.body;
   const token = req.params.token;
 
   try {
@@ -241,7 +241,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
-    user.password = password;
+    user.password = newPassword;
 
     await user.save();
 

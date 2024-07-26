@@ -46,7 +46,7 @@ const startServer = async () => {
 
       if(error) {
         return res.status(400).json({
-          message: "Could not send emal",
+          message: "Could not send email",
           error
         })
       }

@@ -8,8 +8,8 @@ userRoutes.get('/api/v1/users', rbacMiddleware(['Super Admin']), getAllUsers);
 userRoutes.post('/api/v1/auth/signup', signup);
 userRoutes.post('/api/v1/auth/signin', signin);
 userRoutes.post(`/api/v1/auth/rehydrate-token`, rehydrateToken);
-userRoutes.post(`/forgot-password`, sendResetPassord);
-userRoutes.post('/verify-reset-token', verifyResetToken);
-userRoutes.post(`/reset-password/`, resetPassword);
+userRoutes.post(`/api/v1/auth/forgot-password`, sendResetPassord);
+userRoutes.post('/api/v1/auth/verify-reset-token', verifyResetToken);
+userRoutes.post(`/api/v1/auth/reset-password/`, resetPassword);
 
 export default userRoutes
