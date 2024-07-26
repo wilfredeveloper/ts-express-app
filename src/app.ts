@@ -11,7 +11,7 @@ const app = express();
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = ["http://localhost:3000", "http://192.168.100.101:3000"];
 
 const corsOptions = {
   origin: allowedOrigins,
